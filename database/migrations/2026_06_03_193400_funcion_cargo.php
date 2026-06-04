@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::table('funcioCargo', function (Blueprint $table) {
+        Schema::create('funcioCargo', function (Blueprint $table) {
            $table->id();
            $table->string('descripcion_funcion');
            $table->enum('estado', ['activo', 'inactivo'])->default('activo');
-           $table->foreignId('id_cargo')->constrained();
+           $table->foreignId('id_cargo')->constrained('cargos')->cascadeOnUpdate()->cascadeOnDelete();
+           $table->timestamps();
         });
     }
 

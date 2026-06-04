@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha_de_ingreso');
             $table->decimal('salario', 8, 2);
             $table->enum('estado', ['activo', 'inactivo'])->default('activo');
-            $table->foreignId('id_cargo')->constrained();
+            $table->foreignId('id_cargo')->constrained('cargos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
