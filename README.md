@@ -69,7 +69,8 @@ GET /api/empleados
 ### Ejemplo
 
 ```bash
-curl http://127.0.0.1:8000/api/empleados
+$ curl http://127.0.0.1:8000/api/empleados -H "Authorization: Bearer TU_TOKEN" -H "Content-Type: application/json"
+
 ```
 
 ---
@@ -85,16 +86,8 @@ POST /api/empleados
 ### Ejemplo
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/empleados \
--H "Content-Type: application/json" \
--H "Accept: application/json" \
--d '{
-    "nombre":"Jose",
-    "apellido":"Ruiz",
-    "fecha_nacimiento":"2000-05-10",
-    "fecha_ingreso":"2024-01-15",
-    "cargo_id":1
-}'
+curl -X POST http://127.0.0.1:8000/api/empleados -H "Authorization: Bearer TU_TOKEN" -H "Content-Type: application/json" -d '{"nombre":"Jose","apellido":"Ruiz","fecha_nacimiento":"2000-05-10","fecha_de_ingreso":"2024-01-15","salario":20000,"id_cargo":1}'
+
 ```
 
 ---
@@ -110,16 +103,8 @@ PUT /api/empleados/{id}
 ### Ejemplo
 
 ```bash
-curl -X PUT http://127.0.0.1:8000/api/empleados/1 \
--H "Content-Type: application/json" \
--H "Accept: application/json" \
--d '{
-    "nombre":"Jose Actualizado",
-    "apellido":"Ruiz",
-    "fecha_nacimiento":"2000-05-10",
-    "fecha_ingreso":"2024-01-15",
-    "cargo_id":1
-}'
+$ curl -X PUT http://127.0.0.1:8000/api/empleados/6 -H "Authorization: Bearer 5|7TVnTp5G1KMXo6m2pmA5S5wYc2zFLyEiLbCYnr9q8a379168" -H "Content-Type: application/json" -d '{"nombre":"Ruiz","apellido":"perez"}'
+
 ```
 
 ---

@@ -35,7 +35,7 @@ class EmpleadoController extends Controller
     {
         // funcion para crear un nuevo empleado
         $empleado = Empleados::create($request->all());
-        return response()->json(['message' => 'Empleado creado correctamente', 'Empleado Creado' => $empleado], 200);
+        return response()->json(['message' => 'Empleado creado correctamente', 'Empleado Creado' => $empleado], 201);
     }
 
     /**
