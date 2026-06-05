@@ -58,6 +58,18 @@ http://127.0.0.1:8000
 
 # Operaciones CRUD de Empleados
 
+# Primero autenticarse esto para generar el token debido a que las rutas estan protegidas
+```bash
+$ curl -X POST http://127.0.0.1:8000/api/login -H "Content-Type: application/json" -d '{"email":"ruix@gmail.com","password":"123456790"}'
+```
+
+# Aqui una ves aautenticado te mostrara los siguientes datos con incluyendo tu token el cual utilizaras para cada petecion 
+```bas
+{"message":"Login exitoso","token":"6|zXzcIMrAsFreDAsYJyKCRMoHET7f9KDLF5h8IOd0367c06b3","user":{"id":3,"name":"santos","email":"ruix@gmail.com","email_verified_at":null,"created_at":"2026-06-05T03:46:54.000000Z","updated_at":"2026-06-05T03:46:54.000000Z"},"mensaje":"Bienvenido: santos"}
+
+```
+
+
 ## Listar empleados
 
 ### Solicitud
