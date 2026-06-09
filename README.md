@@ -113,9 +113,16 @@ Para consumir los endpoints protegidos debes enviar el token en la cabecera:
 ```http
 Authorization: Bearer TU_TOKEN_AQUI
 ```
-
-### Ejemplo de autenticación con curl
-
+## De esta forma nos registramos en caso tal deque nuestro usuario no exista
+```bash
+curl -X POST http://127.0.0.1:8000/api/register \ -H "Accept: application/json" \ -H "Content-Type: application/json" \ -d "{"name":"Juan Perez","email":"juan@example.com","password":"12345678"}"  
+Respuesta esperada: mensaje de confirmación, datos básicos del usuario y token.
+```
+### Ejemplo de autenticación con curl de esta forma nos auttenticamos y obtendremos nuestro token el cual nos servira para hacer las peticiones 
+```bash
+curl -X POST http://127.0.0.1:8000/api/login \ -H "Accept: application/json" \ -H "Content-Type: application/json" \ -d "{"email":"juan@example.com","password":"12345678"}"  
+La respuesta incluye el token que debe copiarse para consumir las rutas protegidas.
+```
 ```bash
 curl http://127.0.0.1:8000/api/cargos \
 -H "Authorization: Bearer TU_TOKEN_AQUI" \
