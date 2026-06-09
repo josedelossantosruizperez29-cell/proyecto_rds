@@ -4,12 +4,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class cargo extends Model
+class Cargo extends Model
 {
     // modelo de cargo
 
     use hasFactory;
-
     protected $fillable = [
         'nombre_cargo',
         'descripcion',

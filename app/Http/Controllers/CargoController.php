@@ -41,9 +41,14 @@ class CargoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        //funcione para buscar un cargo por id
+        $cargo = Cargo::find($id);
+        if (!$cargo) {
+            return response()->json(['message' => 'Cargo no encontrado'], 404);
+        }
+        return response()->json($cargo);
     }
 
     /**
@@ -57,9 +62,15 @@ class CargoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        //funcion para actualizar los datos de un cargo
+        $cargo = Cargo::find($id);
+        if (!$cargo) {
+            return response()->json(['message' => 'Cargo no encontrado'], 404);
+        }
+        $cargo->update($request->all());
+        return response()->json(['message' => 'Datos del cargo actualizados correctamente', 'Cargo Actualizado' => $cargo], 200);
     }
 
     /**
@@ -67,6 +78,12 @@ class CargoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //funcion para eliminar un cargo
+        $cargo = Cargo::find($id);
+        if (!$cargo) {
+            return response()->json(['message' => 'Cargo no encontrado'], 404);
+        }
+        $cargo->delete();
+        return response()->json(['message' => 'Cargo eliminado correctamente'], 200);
     }
 }

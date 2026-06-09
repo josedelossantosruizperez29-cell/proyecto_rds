@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\cargo;
+use App\Models\Cargo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * @extends Factory<cargo>
+ * @extends Factory<Cargo>
  */
 class CargoFactory extends Factory
 {
