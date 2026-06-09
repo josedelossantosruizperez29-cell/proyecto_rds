@@ -1,19 +1,17 @@
 <?php
 
 namespace Database\Seeders;
-
+use App\Models\FuncionCargo;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Cargo;
 
-class CargoSeeder extends Seeder
+class FuncionCargoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // ya configurado el factory creamos 10 cargos fake
-        Cargo::factory()->count(10)->create();
+        FuncionCargo::factory(10)->create();
     }
 }
