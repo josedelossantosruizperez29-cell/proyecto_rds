@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedhttpException;
 use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -30,6 +31,13 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
+          $exceptions->render(function (MethodNotAllowedHttpException $exception, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Metodo no permitido para esta ruta.',
+                ], 405);
+            }
+    });
         $exceptions->render(function (ValidationException $exception, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -39,3 +47,5 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
     })->create();
+
+  
