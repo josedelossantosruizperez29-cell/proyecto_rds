@@ -1,18 +1,13 @@
 <?php
 
-namespace Tests\Feature;
-
-use Tests\TestCase;
 use App\Models\Cargo;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Illuminate\Foundation\Testing\RefreshDatabase;  
 
-class CargoTest extends TestCase
-{
-  use RefreshDatabase;
-public function test_listar_cargos_solo_autorizados(): void
-{
+uses(RefreshDatabase::class);
+
+test('listar cargos solo si el usuario esta autenticado', function () {
     Sanctum::actingAs(User::factory()->create());
 
     Cargo::factory()->count(3)->create();
@@ -20,21 +15,22 @@ public function test_listar_cargos_solo_autorizados(): void
     $response = $this->getJson('/api/cargos');
 
     $response->assertStatus(200);
-}
-public function test_no_puede_listar_cargos_sin_autenticacion(): void
-{
+});
+
+test('no puede listar cargos sin autenticacion', function () {
     $response = $this->getJson('/api/cargos');
 
-    $response->assertStatus(401);
-}
+    $response
+        ->assertStatus(401)
+        ->assertJsonPath('message', 'No autenticado. Debes iniciar sesion para acceder a este recurso.');
+});
 
-public function test_crear_cargo(): void
-{
+test('crear cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $datos = [
         'nombre_cargo' => 'Desarrollador Backend',
-        'descripcion' => 'Encargado de desarrollar APIs'
+        'descripcion' => 'Encargado de desarrollar APIs',
     ];
 
     $response = $this->postJson('/api/cargos', $datos);
@@ -42,12 +38,11 @@ public function test_crear_cargo(): void
     $response->assertStatus(201);
 
     $this->assertDatabaseHas('cargos', [
-        'nombre_cargo' => 'Desarrollador Backend'
+        'nombre_cargo' => 'Desarrollador Backend',
     ]);
-}
+});
 
-public function test_mostrar_un_solo_cargo_por_id(): void
-{
+test('mostrar un solo cargo por id', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $cargo = Cargo::factory()->create();
@@ -60,17 +55,16 @@ public function test_mostrar_un_solo_cargo_por_id(): void
         'id' => $cargo->id,
         'nombre_cargo' => $cargo->nombre_cargo,
     ]);
-}
+});
 
-public function test_actualizar_cargo(): void
-{
+test('actualizar cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $cargo = Cargo::factory()->create();
 
     $datosActualizados = [
         'nombre_cargo' => 'Arquitecto de Software',
-        'descripcion' => 'Diseña la arquitectura del sistema'
+        'descripcion' => 'Disena la arquitectura del sistema',
     ];
 
     $response = $this->putJson("/api/cargos/{$cargo->id}", $datosActualizados);
@@ -80,12 +74,11 @@ public function test_actualizar_cargo(): void
     $this->assertDatabaseHas('cargos', [
         'id' => $cargo->id,
         'nombre_cargo' => 'Arquitecto de Software',
-        'descripcion' => 'Diseña la arquitectura del sistema'
+        'descripcion' => 'Disena la arquitectura del sistema',
     ]);
-}
+});
 
-public function test_eliminar_cargo(): void
-{
+test('eliminar cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $cargo = Cargo::factory()->create();
@@ -95,8 +88,58 @@ public function test_eliminar_cargo(): void
     $response->assertStatus(200);
 
     $this->assertDatabaseMissing('cargos', [
-        'id' => $cargo->id
+        'id' => $cargo->id,
     ]);
-}
+});
 
-}
+test('no puede crear cargo sin nombre', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $response = $this->postJson('/api/cargos', [
+        'descripcion' => 'Encargado de desarrollar APIs',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['nombre_cargo']);
+});
+
+test('no puede crear cargo sin descripcion', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $response = $this->postJson('/api/cargos', [
+        'nombre_cargo' => 'Desarrollador Backend',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['descripcion']);
+});
+
+test('no puede actualizar cargo con nombre vacio', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $response = $this->putJson("/api/cargos/{$cargo->id}", [
+        'nombre_cargo' => '',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['nombre_cargo']);
+});
+
+test('no puede actualizar cargo con descripcion vacia', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $response = $this->putJson("/api/cargos/{$cargo->id}", [
+        'descripcion' => '',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['descripcion']);
+});

@@ -1,33 +1,64 @@
 <?php
-// el usuario puede actualizar un empleado solo si esta autenticado
-namespace Tests\Feature;
-use Tests\TestCase;
+
 use App\Models\Cargo;
 use App\Models\Empleados;
-use Laravel\Sanctum\Sanctum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-class Test_actualizar_empleadoTest extends TestCase{
-    use RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 
-    public function test_puede_actualizar_un_empleado_solo_si_el_usuario_esta_autenticado(): void{
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
-        $cargo=Cargo::factory()->create();
-        $datos=[
-            'nombre'=>'jose_actualizado',
-            'apellido'=>'ruiz_actualizado',
-        ];
-        $empleado = Empleados::factory()->create([
-            'id_cargo' => $cargo->id
-        ]);
-        $response=$this->putJson("/api/empleados/{$empleado->id}", $datos);
-        $response->assertStatus(200);
-        //verificar que la informacion del usuario fue actualizada correctamente en la base de datos
-       $this->assertDatabaseHas('empleados', $datos);
-        
+uses(RefreshDatabase::class);
 
-        
+test('puede actualizar un empleado solo si el usuario esta autenticado', function () {
+    Sanctum::actingAs(User::factory()->create());
 
-}
-}
+    $cargo = Cargo::factory()->create();
+
+    $datos = [
+        'nombre' => 'jose_actualizado',
+        'apellido' => 'ruiz_actualizado',
+    ];
+
+    $empleado = Empleados::factory()->create([
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response = $this->putJson("/api/empleados/{$empleado->id}", $datos);
+
+    $response->assertStatus(200);
+
+    $this->assertDatabaseHas('empleados', $datos);
+});
+
+test('no puede actualizar un empleado sin autenticacion', function () {
+    $cargo = Cargo::factory()->create();
+
+    $empleado = Empleados::factory()->create([
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response = $this->putJson("/api/empleados/{$empleado->id}", [
+        'nombre' => 'jose_actualizado',
+    ]);
+
+    $response
+        ->assertStatus(401)
+        ->assertJsonPath('message', 'No autenticado. Debes iniciar sesion para acceder a este recurso.');
+});
+
+test('no puede actualizar un empleado con cargo inexistente', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $empleado = Empleados::factory()->create([
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response = $this->putJson("/api/empleados/{$empleado->id}", [
+        'id_cargo' => 999,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['id_cargo']);
+});

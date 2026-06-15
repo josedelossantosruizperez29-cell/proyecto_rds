@@ -1,19 +1,14 @@
 <?php
 
-namespace Tests\Feature;
-
-use App\Models\User;
 use App\Models\Cargo;
 use App\Models\FuncionCargo;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 
-class FuncionCargoTest extends TestCase
-{
-    use RefreshDatabase;
-    public function test_listar_funciones_cargo(): void
-{
+uses(RefreshDatabase::class);
+
+test('listar funciones cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     FuncionCargo::factory()->count(3)->create();
@@ -21,15 +16,17 @@ class FuncionCargoTest extends TestCase
     $response = $this->getJson('/api/funcionCargos');
 
     $response->assertStatus(200);
-}
-public function test_no_puede_listar_funciones_sin_autenticacion(): void
-{
+});
+
+test('no puede listar funciones sin autenticacion', function () {
     $response = $this->getJson('/api/funcionCargos');
 
-    $response->assertStatus(401);
-}
-public function test_crear_funcion_cargo(): void
-{
+    $response
+        ->assertStatus(401)
+        ->assertJsonPath('message', 'No autenticado. Debes iniciar sesion para acceder a este recurso.');
+});
+
+test('crear funcion cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $cargo = Cargo::factory()->create();
@@ -44,13 +41,13 @@ public function test_crear_funcion_cargo(): void
 
     $response->assertStatus(201);
 
-    $this->assertDatabaseHas('funciocargo', [
+    $this->assertDatabaseHas('funcioCargo', [
         'descripcion_funcion' => 'Gestionar la base de datos',
         'id_cargo' => $cargo->id,
     ]);
-}
-public function test_mostrar_funcion_cargo(): void
-{
+});
+
+test('mostrar funcion cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $funcion = FuncionCargo::factory()->create();
@@ -63,9 +60,9 @@ public function test_mostrar_funcion_cargo(): void
         'id' => $funcion->id,
         'descripcion_funcion' => $funcion->descripcion_funcion,
     ]);
-}
-public function test_actualizar_funcion_cargo(): void
-{
+});
+
+test('actualizar funcion cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $funcion = FuncionCargo::factory()->create();
@@ -83,14 +80,14 @@ public function test_actualizar_funcion_cargo(): void
 
     $response->assertStatus(200);
 
-    $this->assertDatabaseHas('funciocargo', [
+    $this->assertDatabaseHas('funcioCargo', [
         'id' => $funcion->id,
         'descripcion_funcion' => 'Administrar servidores',
         'estado' => 'inactivo',
     ]);
-}
-public function test_eliminar_funcion_cargo(): void
-{
+});
+
+test('eliminar funcion cargo', function () {
     Sanctum::actingAs(User::factory()->create());
 
     $funcion = FuncionCargo::factory()->create();
@@ -101,8 +98,108 @@ public function test_eliminar_funcion_cargo(): void
 
     $response->assertStatus(200);
 
-    $this->assertDatabaseMissing('funciocargo', [
+    $this->assertDatabaseMissing('funcioCargo', [
         'id' => $funcion->id,
     ]);
-}
-}
+});
+
+test('no puede crear funcion cargo sin descripcion', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $response = $this->postJson('/api/funcionCargos', [
+        'estado' => 'activo',
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['descripcion_funcion']);
+});
+
+test('no puede crear funcion cargo sin estado', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $response = $this->postJson('/api/funcionCargos', [
+        'descripcion_funcion' => 'Gestionar la base de datos',
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['estado']);
+});
+
+test('no puede crear funcion cargo con estado invalido', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $response = $this->postJson('/api/funcionCargos', [
+        'descripcion_funcion' => 'Gestionar la base de datos',
+        'estado' => 'pendiente',
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['estado']);
+});
+
+test('no puede crear funcion cargo sin cargo', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $response = $this->postJson('/api/funcionCargos', [
+        'descripcion_funcion' => 'Gestionar la base de datos',
+        'estado' => 'activo',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['id_cargo']);
+});
+
+test('no puede crear funcion cargo con cargo inexistente', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $response = $this->postJson('/api/funcionCargos', [
+        'descripcion_funcion' => 'Gestionar la base de datos',
+        'estado' => 'activo',
+        'id_cargo' => 999,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['id_cargo']);
+});
+
+test('no puede actualizar funcion cargo con estado invalido', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $funcion = FuncionCargo::factory()->create();
+
+    $response = $this->putJson("/api/funcionCargos/{$funcion->id}", [
+        'estado' => 'pendiente',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['estado']);
+});
+
+test('no puede actualizar funcion cargo con cargo inexistente', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $funcion = FuncionCargo::factory()->create();
+
+    $response = $this->putJson("/api/funcionCargos/{$funcion->id}", [
+        'id_cargo' => 999,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['id_cargo']);
+});

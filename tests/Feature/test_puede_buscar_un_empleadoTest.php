@@ -1,29 +1,27 @@
 <?php
 
-namespace Tests\Feature;
-use Tests\TestCase;
 use App\Models\Cargo;
 use App\Models\Empleados;
-use Laravel\Sanctum\Sanctum;
-use Database\Factories\EmpleadosFactory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-class test_puede_buscar_un_empleadoTest extends TestCase{
-    use RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 
-    public function test_puede_buscar_un_empleado_solo_si_el_usuario_esta_autenticado(): void{
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
-        $cargo = Cargo::factory()->create();
-       $empleado = Empleados::factory()->create([
-            'id_cargo' => $cargo->id
-        ]);
-        $response=$this->getJson("/api/empleados/{$empleado->id}");
-        $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'nombre'=>$empleado->nombre,
-            'apellido'=>$empleado->apellido
-        ]);
-}
-}
+uses(RefreshDatabase::class);
 
+test('puede buscar un empleado solo si el usuario esta autenticado', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    $empleado = Empleados::factory()->create([
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response = $this->getJson("/api/empleados/{$empleado->id}");
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment([
+        'nombre' => $empleado->nombre,
+        'apellido' => $empleado->apellido,
+    ]);
+});

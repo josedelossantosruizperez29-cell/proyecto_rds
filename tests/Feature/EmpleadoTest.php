@@ -1,29 +1,31 @@
 <?php
-// este test es para probar si verdaderamente se pueden listar los empleados
-namespace Tests\Feature;
-use Tests\TestCase;
+
 use App\Models\Cargo;
 use App\Models\Empleados;
-use laravel\Sanctum\Sanctum;
-use Database\Factories\EmpleadosFactory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-class EmpleadoTest extends TestCase{
-    use RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 
-    public function test_listar_empleados_solo_si_el_usuario_esta_autenticado(): void{
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
-        $cargo = Cargo::factory()->create();
-        Empleados::factory()->count(5)->create([
-            'id_cargo' => $cargo->id
-        ]);
-        $response=$this->getJson('api/empleados');
-        $response->assertStatus(200);
-}
-   public function test_no_puede_listar_empleados_sin_autenticacion(): void{
-    $response=$this->getJson('api/empleados');
-    $response->assertStatus(401);
-   }
-}
+uses(RefreshDatabase::class);
 
+test('listar empleados solo si el usuario esta autenticado', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $cargo = Cargo::factory()->create();
+
+    Empleados::factory()->count(5)->create([
+        'id_cargo' => $cargo->id,
+    ]);
+
+    $response = $this->getJson('/api/empleados');
+
+    $response->assertStatus(200);
+});
+
+test('no puede listar empleados sin autenticacion', function () {
+    $response = $this->getJson('/api/empleados');
+
+    $response
+        ->assertStatus(401)
+        ->assertJsonPath('message', 'No autenticado. Debes iniciar sesion para acceder a este recurso.');
+});

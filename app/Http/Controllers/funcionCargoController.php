@@ -12,10 +12,11 @@ class funcionCargoController extends Controller
      */
     public function index()
     {
-        //listar todas las funciones de los cargos
-        if(!FuncionCargo::all()->isEmpty()){
+        // listar todas las funciones de los cargos
+        if (! FuncionCargo::all()->isEmpty()) {
             return response()->json(FuncionCargo::all());
         }
+
         return response()->json(['message' => 'No se encontraron funciones de cargos'], 404);
     }
 
@@ -32,8 +33,23 @@ class funcionCargoController extends Controller
      */
     public function store(Request $request)
     {
-        //funcion para crear una nueva funcion de cargo
-        $funcionCargo = FuncionCargo::create($request->all());
+        // funcion para crear una nueva funcion de cargo
+        $validated = $request->validate([
+            'descripcion_funcion' => 'required|string|max:1000',
+            'estado' => 'required|in:activo,inactivo',
+            'id_cargo' => 'required|exists:cargos,id',
+        ], [
+            'descripcion_funcion.required' => 'La descripcion de la funcion es obligatoria.',
+            'descripcion_funcion.string' => 'La descripcion de la funcion debe ser texto.',
+            'descripcion_funcion.max' => 'La descripcion de la funcion no puede superar 1000 caracteres.',
+            'estado.required' => 'El estado de la funcion es obligatorio.',
+            'estado.in' => 'El estado debe ser activo o inactivo.',
+            'id_cargo.required' => 'El cargo de la funcion es obligatorio.',
+            'id_cargo.exists' => 'El cargo seleccionado no existe.',
+        ]);
+
+        $funcionCargo = FuncionCargo::create($validated);
+
         return response()->json(['message' => 'Funcion de cargo creada correctamente', 'Funcion de Cargo Creada' => $funcionCargo], 201);
     }
 
@@ -42,11 +58,12 @@ class funcionCargoController extends Controller
      */
     public function show(string $id)
     {
-        //mostrar una funcion de cargo por id
+        // mostrar una funcion de cargo por id
         $funcionCargo = FuncionCargo::find($id);
-        if (!$funcionCargo) {
+        if (! $funcionCargo) {
             return response()->json(['message' => 'Funcion de cargo no encontrado'], 404);
         }
+
         return response()->json($funcionCargo);
     }
 
@@ -63,12 +80,28 @@ class funcionCargoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //actualizar los datos de una funcion de cargo
+        // actualizar los datos de una funcion de cargo
         $funcionCargo = FuncionCargo::find($id);
-        if (!$funcionCargo) {
+        if (! $funcionCargo) {
             return response()->json(['message' => 'Funcion de cargo no encontrado'], 404);
         }
-        $funcionCargo->update($request->all());
+
+        $validated = $request->validate([
+            'descripcion_funcion' => 'sometimes|required|string|max:1000',
+            'estado' => 'sometimes|required|in:activo,inactivo',
+            'id_cargo' => 'sometimes|required|exists:cargos,id',
+        ], [
+            'descripcion_funcion.required' => 'La descripcion de la funcion es obligatoria.',
+            'descripcion_funcion.string' => 'La descripcion de la funcion debe ser texto.',
+            'descripcion_funcion.max' => 'La descripcion de la funcion no puede superar 1000 caracteres.',
+            'estado.required' => 'El estado de la funcion es obligatorio.',
+            'estado.in' => 'El estado debe ser activo o inactivo.',
+            'id_cargo.required' => 'El cargo de la funcion es obligatorio.',
+            'id_cargo.exists' => 'El cargo seleccionado no existe.',
+        ]);
+
+        $funcionCargo->update($validated);
+
         return response()->json(['message' => 'Datos de la funcion de cargo actualizados correctamente', 'Funcion de Cargo Actualizado' => $funcionCargo], 200);
     }
 
@@ -77,12 +110,13 @@ class funcionCargoController extends Controller
      */
     public function destroy($id)
     {
-        //eliminar un funcion de cargo
+        // eliminar un funcion de cargo
         $funcionCargo = FuncionCargo::find($id);
-        if (!$funcionCargo) {
+        if (! $funcionCargo) {
             return response()->json(['message' => 'Funcion de cargo no encontrado'], 404);
         }
         $funcionCargo->delete();
+
         return response()->json(['message' => 'Funcion de cargo eliminada correctamente'], 200);
     }
 }
