@@ -570,7 +570,7 @@ curl -X PUT http://127.0.0.1:8000/api/empleados/1 \
     "apellido": "Perez Gomez",
     "fecha_nacimiento": "1998-05-10",
     "fecha_de_ingreso": "2024-01-15",
-    "salario": 3000000,
+    "salario": 30000,
     "estado": "activo",
     "id_cargo": 1
   }'
