@@ -13,7 +13,7 @@ class CargoSeeder extends Seeder
      */
     public function run(): void
     {
-        // ya configurado el factory creamos 10 cargos fake
-        Cargo::factory()->count(10)->create();
+        // creamos 40 cargos fake
+        Cargo::factory()->count(40)->create();
     }
 }

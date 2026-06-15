@@ -1,8 +1,9 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Cargo;
 use App\Models\FuncionCargo;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FuncionCargoSeeder extends Seeder
@@ -12,6 +13,12 @@ class FuncionCargoSeeder extends Seeder
      */
     public function run(): void
     {
-        FuncionCargo::factory(10)->create();
+        Cargo::all()->each(function (Cargo $cargo): void {
+            FuncionCargo::factory()
+                ->count(5)
+                ->create([
+                    'id_cargo' => $cargo->id,
+                ]);
+        });
     }
 }

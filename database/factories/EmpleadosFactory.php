@@ -26,6 +26,7 @@ class EmpleadosFactory extends Factory
             'fecha_de_ingreso'=> $this->faker->date(),
             'salario'=> $this->faker->randomFloat(2, 1000, 10000),
             'estado'=> $this->faker->randomElement(['activo', 'inactivo']),
+            'id_cargo' => Cargo::query()->inRandomOrder()->value('id') ?? Cargo::factory(),
         ];
     }
 }
