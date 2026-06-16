@@ -832,7 +832,7 @@ curl -X POST http://127.0.0.1:8000/api/funcionCargos \
   -d '{
     "descripcion_funcion": "Gestionar la base de datos",
     "estado": "activo",
-    "id_cargo": 1
+    "id_cargo": 5
   }'
 ```
 
@@ -844,7 +844,7 @@ Respuesta esperada:
   "Funcion de Cargo Creada": {
     "descripcion_funcion": "Gestionar la base de datos",
     "estado": "activo",
-    "id_cargo": 1
+    "id_cargo": 5
   }
 }
 ```
@@ -875,10 +875,10 @@ Respuesta esperada:
 {
   "message": "Datos de la funcion de cargo actualizados correctamente",
   "Funcion de Cargo Actualizado": {
-    "id": 1,
+    "id": 6,
     "descripcion_funcion": "Administrar servidores",
     "estado": "inactivo",
-    "id_cargo": 1
+    "id_cargo": 2
   }
 }
 ```
