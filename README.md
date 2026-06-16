@@ -806,7 +806,7 @@ GET /api/funcionCargos/{id}
 ```
 
 ```bash
-curl http://127.0.0.1:8000/api/funcionCargos/1 \
+curl http://127.0.0.1:8000/api/funcionCargos/7 \
   -H "Authorization: Bearer TU_TOKEN_AQUI" \
   -H "Accept: application/json"
 ```
@@ -861,14 +861,14 @@ PUT /api/funcionCargos/{id}
 ```
 
 ```bash
-curl -X PUT http://127.0.0.1:8000/api/funcionCargos/1 \
+curl -X PUT http://127.0.0.1:8000/api/funcionCargos/6 \
   -H "Authorization: Bearer TU_TOKEN_AQUI" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d '{
     "descripcion_funcion": "Administrar servidores",
     "estado": "inactivo",
-    "id_cargo": 1
+    "id_cargo": 2
   }'
 ```
 
@@ -895,7 +895,7 @@ DELETE /api/funcionCargos/{id}
 ```
 
 ```bash
-curl -X DELETE http://127.0.0.1:8000/api/funcionCargos/1 \
+curl -X DELETE http://127.0.0.1:8000/api/funcionCargos/7 \
   -H "Authorization: Bearer TU_TOKEN_AQUI" \
   -H "Accept: application/json"
 ```
