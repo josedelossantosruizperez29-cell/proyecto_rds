@@ -65,7 +65,7 @@ El proyecto usa:
 Primero clona el repositorio en tu maquina:
 
 ```bash
-git clone URL_DEL_REPOSITORIO
+git clone https://github.com/josedelossantosruizperez29-cell/proyecto_rds.git
 ```
 
 Despues entra a la carpeta del proyecto:
@@ -73,8 +73,6 @@ Despues entra a la carpeta del proyecto:
 ```bash
 cd nombre_del_proyecto
 ```
-
-> Reemplaza `URL_DEL_REPOSITORIO` por la URL real del repositorio.
 
 ---
 
