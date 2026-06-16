@@ -71,7 +71,7 @@ git clone https://github.com/josedelossantosruizperez29-cell/proyecto_rds.git
 Despues entra a la carpeta del proyecto:
 
 ```bash
-cd nombre_del_proyecto
+cd proyecto_rds
 ```
 
 ---
