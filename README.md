@@ -44,7 +44,7 @@ Antes de instalar el proyecto, asegurate de tener instalado:
 
 - PHP 8.3 o superior
 - Composer
-- MySQL o MariaDB
+- MySQL
 - Node.js y NPM
 - Git
 - Laravel compatible con la version del proyecto
@@ -55,7 +55,6 @@ El proyecto usa:
 - Laravel `^13.8`
 - Laravel Sanctum `^4.0`
 - PHP `^8.3`
-- Vite para los assets del frontend
 
 ---
 
