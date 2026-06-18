@@ -29,6 +29,10 @@ class AuthController extends Controller
 
     public function register(Request $request){
         // aqui registramos un nuevo usuario
+         $user = User::where('email', $request->email)->first();
+        if ($user) {
+            return response()->json(['message' => 'El usuario ya existe'], 401);
+        }
          $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
