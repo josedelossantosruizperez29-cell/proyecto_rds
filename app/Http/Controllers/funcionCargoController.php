@@ -14,7 +14,7 @@ class funcionCargoController extends Controller
     {
         // listar todas las funciones de los cargos
         if (! FuncionCargo::all()->isEmpty()) {
-            return response()->json(FuncionCargo::all());
+            return response()->json(FuncionCargo::paginate(10));
         }
 
         return response()->json(['message' => 'No se encontraron funciones de cargos'], 404);

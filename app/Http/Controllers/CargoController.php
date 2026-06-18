@@ -14,7 +14,7 @@ class CargoController extends Controller
     {
         // retorna todos los cargos en json
         if (! Cargo::all()->isEmpty()) {
-            return response()->json(Cargo::all());
+            return response()->json(Cargo::paginate(10));
         }
 
         return response()->json(['message' => 'No se encontraron cargos'], 404);

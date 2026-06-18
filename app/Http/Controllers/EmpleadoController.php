@@ -14,7 +14,7 @@ class EmpleadoController extends Controller
     {
         // devuelve todos los empleados en json
         if (! Empleados::all()->isEmpty()) {
-            return response()->json(Empleados::all());
+            return response()->json(Empleados::paginate(10));
         }
 
         return response()->json(['message' => 'No se encontraron empleados registrados'], 404);
