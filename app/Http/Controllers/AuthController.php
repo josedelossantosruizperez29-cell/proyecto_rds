@@ -47,7 +47,7 @@ class AuthController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
        return response([
            'message' => 'Usuario creado correctamente',
-           'user' => $user->name.' con sus datos de gmail '.$user->email,
+           'user' => $user,
            'token' => $token
        ]);
         

@@ -20,6 +20,20 @@ class CargoController extends Controller
         return response()->json(['message' => 'No se encontraron cargos'], 404);
     }
 
+    public function detalle_cargos(){
+    $cargos = Cargo::with('funcioCargo')->get();
+
+return response()->json(
+    $cargos->map(function ($cargo) {
+        return [
+            'cargo' => $cargo->nombre_cargo,
+            'funciones' => $cargo->funcioCargo->pluck('descripcion_funcion'),
+        ];
+    })
+);
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */
