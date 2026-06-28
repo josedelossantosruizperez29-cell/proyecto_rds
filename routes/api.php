@@ -23,6 +23,7 @@ Route::get('/user', function (Request $request) {
     Route::apiResource('empleados', EmpleadoController::class);
     Route::apiResource('funcionCargos', funcionCargoController::class);
     Route::GET('detalle_empleado/{id}', [EmpleadoController::class, 'detalle_empleado']);
+    Route::GET('detalle_cargos',[CargoController::class,'detalle_cargos']);
     });
 
 

@@ -29,6 +29,10 @@ class AuthController extends Controller
 
     public function register(Request $request){
         // aqui registramos un nuevo usuario
+         $user = User::where('email', $request->email)->first();
+        if ($user) {
+            return response()->json(['message' => 'El usuario ya existe'], 401);
+        }
          $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -43,7 +47,7 @@ class AuthController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
        return response([
            'message' => 'Usuario creado correctamente',
-           'user' => $user->name.' con sus datos de gmail '.$user->email,
+           'user' => $user,
            'token' => $token
        ]);
         
